@@ -30,4 +30,14 @@ export const Random = () => {
     return random
 }
 
-const Words = ["perro", "miedo", "cinco", "burro", "papel", "lapiz", "silla", "cable"]
+export const Words = [
+    "PERRO", "MIEDO", "CINCO", "BURRO", "PAPEL", "LAPIZ", 
+    "SILLA", "CABLE", "COCHE", "CIRCO", "ARROZ", "PISTA", 
+    "RETAR", "RADIO", "PILAR", "BUENO", "SABER", "CABRA",
+    "COFRE", "LUGAR", "HIELO", "CORTE", "CLAVO", "ACERO",
+    "VIDEO", "ZURDO", "CRUCE", "TINTO", "MIRLA", "BANCO",
+    "ARDER", "HONDA", "FICHA", "TORTA", "MATON", "GENIO",
+    "DARDO", "MAZDA", "COJIN", "SALIR", "FOTON", "FAVOR",
+    "VERDE", "RODAR", "SONSO", "RAYON", "CIELO", "RATON",
+  ];
+  
