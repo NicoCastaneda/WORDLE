@@ -6,12 +6,12 @@ import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
   return (
-    <GameProvider> 
+    <GameProvider>
       <AppNavigator>
-        <GameScreen/>
+        <GameScreen />
       </AppNavigator>
     </GameProvider>
-    
+
   );
 }
 

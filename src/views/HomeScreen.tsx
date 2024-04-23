@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 export default function HomeScreen() {
     return (
         <View style={styles.container}>
-            <Image 
-                source={require('../../assets/image.png')} 
+            <Image
+                source={require('../../assets/image.png')}
                 style={styles.image}
             />
             <Text style={styles.title}>¡Bienvenido a WORDLE!</Text>
@@ -15,7 +15,7 @@ export default function HomeScreen() {
                 <Text style={styles.htpTitle}>¿Cómo Jugar?</Text>{'\n\n'}
                 - Toque las letras para formar palabras.{'\n'}
                 - Una vez que haya formado una palabra, toque el botón de "ENTER".{'\n'}
-                - Las letras correctas se mostrarán en verde, 
+                - Las letras correctas se mostrarán en verde,
                 las letras que esten contenidas en la palabra pero que no esten en su posición correcta se mostrarán en amarillo
                 y las letras incorrectas se mostrarán en gris.{'\n'}
                 - Si adivinas la palabra correcta, ganas puntos. {'\n'}

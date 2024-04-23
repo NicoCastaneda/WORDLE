@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { Ionicons } from '@expo/vector-icons'; // Importa los iconos de Ionicons
-import GameScreen from "../views/GameScreen";
+import { Ionicons } from '@expo/vector-icons';
 import StatsScreen from "../views/StatsScreen";
 import HomeScreen from "../views/HomeScreen";
+import GameScreen from "../views/GameScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,21 +16,19 @@ const AppNavigator = () => {
                         let iconName;
 
                         if (route.name === 'Inicio') {
-                            iconName = focused ? 'home' : 'home-outline'; // Cambia el icono de Inicio
+                            iconName = focused ? 'home' : 'home-outline';
                         } else if (route.name === 'Jugar') {
-                            iconName = focused ? 'game-controller' : 'game-controller-outline'; // Cambia el icono de Jugar
+                            iconName = focused ? 'game-controller' : 'game-controller-outline';
                         } else if (route.name === 'Puntajes') {
-                            iconName = focused ? 'stats-chart' : 'stats-chart-outline'; // Cambia el icono de Puntajes
+                            iconName = focused ? 'stats-chart' : 'stats-chart-outline';
                         }
 
-                        // Cambia el color del icono siempre a verde
                         const iconColor = 'green';
 
-                        // Devuelve el componente de icono con el nombre y color verde
                         return <Ionicons name={iconName} size={size} color={iconColor} />;
                     },
                     tabBarLabelStyle: {
-                        color: 'green', // Establece el color del título de la pestaña como verde
+                        color: 'green',
                     },
                 })}
             >
