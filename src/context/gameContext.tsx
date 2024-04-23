@@ -26,8 +26,9 @@ export const GameProvider = ({ children }) => {
 
 export const Random = () => {
    
-    const random = Math.floor(Math.random() * (Words.length + 1));
+    const random = Math.floor(Math.random() * (Words.length + 1));  
     return random
+    
 }
 
 export const Words = [
@@ -39,5 +40,8 @@ export const Words = [
     "ARDER", "HONDA", "FICHA", "TORTA", "MATON", "GENIO",
     "DARDO", "MAZDA", "COJIN", "SALIR", "FOTON", "FAVOR",
     "VERDE", "RODAR", "SONSO", "RAYON", "CIELO", "RATON",
+    "COCER", "ANIMO", "CIEGO", "NOVIA", "SORDA", "CIEGA",
+    "ARBOL", "NADAR", "DROGA", "RITMO", "PUDOR", "GRIFO"
   ];
+  
   
