@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import StatsScreen from "../views/StatsScreen";
 import HomeScreen from "../views/HomeScreen";
 import GameScreen from "../views/GameScreen";
+import qr from "../views/qr";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +22,9 @@ const AppNavigator = () => {
                             iconName = focused ? 'game-controller' : 'game-controller-outline';
                         } else if (route.name === 'Puntajes') {
                             iconName = focused ? 'stats-chart' : 'stats-chart-outline';
-                        }
+                        } else if (route.name === 'QR') {
+                            iconName = focused ? 'qr-code-sharp' : 'qr-code-outline';
+                        } 
 
                         const iconColor = 'green';
 
@@ -35,6 +38,7 @@ const AppNavigator = () => {
                 <Tab.Screen name="Inicio" component={HomeScreen} />
                 <Tab.Screen name="Jugar" component={GameScreen} />
                 <Tab.Screen name="Puntajes" component={StatsScreen} />
+                <Tab.Screen name="QR" component={qr} />
             </Tab.Navigator>
         </NavigationContainer>
     );
