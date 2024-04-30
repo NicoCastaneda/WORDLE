@@ -1,11 +1,13 @@
 import { View, Text, TextInput, Button, Modal } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { GameContext, Random, Words } from '../context/gameContext';
 import GameGrid from '../components/GameGrid';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import db from '../context/firebaseConfig'
+import { collection, addDoc, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function GameScreen() {
 
@@ -14,7 +16,9 @@ export default function GameScreen() {
     const [gameOver, setGameOver] = useState(false);
     const [victory, setVictory] = useState(false);
     const [score, setScore] = useState(5000);
-
+    const [totalGames, setTotalGames] = useState(0);
+    const [totalWords, setTotalWords] = useState(0);
+    const [totalScore, setTotalScore] = useState(0);
     const [currentWord, setCurrentWord] = useState('')
     const [attempts, setAttempts] = useState([])
     const targetWord = selectedWord
@@ -34,6 +38,66 @@ export default function GameScreen() {
         }, [])
     );
 
+    useEffect(() => {
+        const fetchInitialStats = async () => {
+            try {
+                const statsRef = doc(db, 'statistics', 'general');
+                const statsSnap = await getDoc(statsRef);
+                if (statsSnap.exists()) {
+                    const data = statsSnap.data();
+                    setTotalGames(data.totalGames);
+                    setTotalWords(data.totalWords);
+                    setTotalScore(data.totalScore);
+                }
+            } catch (error) {
+                console.error('Error fetching initial stats: ', error);
+            }
+        };
+    
+        fetchInitialStats();
+    }, []);
+
+    
+    const saveDataToFirestore = async (totalGames: number, totalWords: number, totalScore: number) => {
+        try {
+            // Referencia al documento de estadísticas generales
+            const statsRef = doc(db, 'statistics', 'general');
+    
+            // Obtener el documento actual
+            const statsDoc = await getDoc(statsRef);
+    
+            if (statsDoc.exists()) {
+                // Si el documento existe, obtener los datos actuales
+                const currentData = statsDoc.data();
+    
+                // Sumar los nuevos valores a los valores existentes
+                const newTotalGames = currentData.totalGames + totalGames;
+                const newTotalWords = currentData.totalWords + totalWords;
+                const newTotalScore = currentData.totalScore + totalScore;
+    
+                // Actualizar los datos en Firestore
+                await updateDoc(statsRef, {
+                    totalGames: newTotalGames,
+                    totalWords: newTotalWords,
+                    totalScore: newTotalScore,
+                });
+            } else {
+                // Si el documento no existe, crear uno nuevo con los datos proporcionados
+                await setDoc(statsRef, {
+                    totalGames: totalGames,
+                    totalWords: totalWords,
+                    totalScore: totalScore,
+                });
+            }
+    
+            console.log('Data saved to Firestore successfully!');
+        } catch (error) {
+            console.error('Error saving data to Firestore: ', error);
+        }
+    };
+    
+
+
     const handleKeyPress = async (key: string) => {
         if (key) {
             const upperKey = key.toUpperCase()
@@ -48,15 +112,9 @@ export default function GameScreen() {
                     // El jugador ha adivinado la palabra, muestra el modal de victoria
                     setGameOver(true);
                     setVictory(true);
-                    // Lee los valores actuales de AsyncStorage
-                    const currentTotalScore = await AsyncStorage.getItem('totalScore');
-                    const currentTotalGames = await AsyncStorage.getItem('totalGames');
-                    const currentTotalWords = await AsyncStorage.getItem('totalWords');
 
-                    // Actualiza y guarda los valores en AsyncStorage
-                    AsyncStorage.setItem('totalScore', ((currentTotalScore ? parseInt(currentTotalScore) : 0) + score).toString());
-                    AsyncStorage.setItem('totalGames', ((currentTotalGames ? parseInt(currentTotalGames) : 0) + 1).toString());
-                    AsyncStorage.setItem('totalWords', ((currentTotalWords ? parseInt(currentTotalWords) : 0) + 1).toString());
+                    await saveDataToFirestore(1, 1, score);
+
                 } else if (attempts.length > 0) {
                     // El jugador ha usado un intento, reduce el puntaje
                     setScore(score - 1000);
@@ -64,11 +122,8 @@ export default function GameScreen() {
                         // El jugador ha usado todos sus intentos, muestra el modal de derrota
                         setGameOver(true);
                         setVictory(false);
-                        // Lee el valor actual de totalGames de AsyncStorage
-                        const currentTotalGames = await AsyncStorage.getItem('totalGames');
 
-                        // Actualiza y guarda el valor en AsyncStorage
-                        AsyncStorage.setItem('totalGames', ((currentTotalGames ? parseInt(currentTotalGames) : 0) + 1).toString());
+                        await saveDataToFirestore(1, 0, 0);
                     }
                 }
 

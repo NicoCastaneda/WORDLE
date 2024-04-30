@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
+import db from '../context/firebaseConfig';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 
 export default function SettingsScreen() {
 
@@ -9,22 +9,20 @@ export default function SettingsScreen() {
   const [totalGames, setTotalGames] = useState(0);
   const [totalWords, setTotalWords] = useState(0);
 
-  const isFocused = useIsFocused();
-
-  const fetchStats = async () => {
-    const score = await AsyncStorage.getItem('totalScore');
-    const games = await AsyncStorage.getItem('totalGames');
-    const words = await AsyncStorage.getItem('totalWords');
-    setTotalScore(score ? parseInt(score) : 0);
-    setTotalGames(games ? parseInt(games) : 0);
-    setTotalWords(words ? parseInt(words) : 0);
-  };
-
   useEffect(() => {
-    if (isFocused) {
-      fetchStats();
-    }
-  }, [isFocused]);
+    const unsubscribe = onSnapshot(doc(db, 'statistics', 'general'), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setTotalScore(data.totalScore || 0);
+        setTotalGames(data.totalGames || 0);
+        setTotalWords(data.totalWords || 0);
+      } else {
+        console.log('No existe el documento de estadísticas generales en Firestore.');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
